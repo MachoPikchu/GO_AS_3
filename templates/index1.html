@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Authentication Demo</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<div class="container">
+  <h1>    {{.title}}</h1>
+  <div id="signup-form" class="form">
+    <h2>Sign Up</h2>
+    <input type="email" id="signup-email" placeholder="Email" required>
+    <input type="password" id="signup-password" placeholder="Password" required>
+    <button onclick="signup()">Sign Up</button>
+  </div>
+  <div id="login-form" class="form">
+    <h2>Login</h2>
+    <input type="email" id="login-email" placeholder="Email" required>
+    <input type="password" id="login-password" placeholder="Password" required>
+    <button onclick="login()">Login</button>
+  </div>
+  <div id="message"></div>
+</div>
+<script >async function signup() {
+    const email = document.getElementById('signup-email').value;
+    const password = document.getElementById('signup-password').value;
+
+    try {
+      const response = await fetch('http://localhost:3000/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email, password })
+      });
+
+      if (!response.ok) {
+        throw new Error('Signup failed');
+      }
+
+      document.getElementById('message').innerText = 'Signup successful!';
+    } catch (error) {
+      console.error(error);
+      document.getElementById('message').innerText = 'Signup failed';
+    }
+  }
+
+  async function login() {
+    const email = document.getElementById('login-email').value;
+    const password = document.getElementById('login-password').value;
+
+    try {
+      const response = await fetch('http://localhost:3000/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email, password })
+      });
+
+      if (!response.ok) {
+        throw new Error('Login failed');
+      }
+
+      const data = await response.json();
+      window.location.href = '/main';
+    } catch (error) {
+      console.error(error);
+      document.getElementById('message').innerText = 'Login failed';
+    }
+  }
+</script>
+</body>
+</html>
